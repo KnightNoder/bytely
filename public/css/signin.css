@@ -1,0 +1,94 @@
+.cont {
+  /* border: solid 1px red; */
+  border: none;
+  box-shadow: 1px 1px 3px black;
+  position: absolute;
+  width: 230px;
+  /* z-index: 1; */
+  transform: translateY(-70px);
+  background: linear-gradient(315deg, white, black);
+}
+
+.cont::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  left: -4px;
+  bottom: -4px;
+  background: linear-gradient(315deg, white, black);
+  z-index: -1;
+  border-radius: 10px;
+}
+
+.cont::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  left: -4px;
+  bottom: -4px;
+  background: linear-gradient(315deg, black, white);
+  filter: blur(5px);
+  z-index: -1;
+  border-radius: 10px;
+}
+
+input[type='text']:focus,
+input[type='password']:focus {
+  /* background-color: whitesmoke; */
+  outline: none;
+}
+
+input[type='text'],
+input[type='password'] {
+  padding: 10px;
+  border-radius: 20px;
+  margin: 10px;
+  border: none;
+}
+
+#submit {
+  padding: 10px;
+  margin: 10px;
+  width: 200px;
+  /* background: linear-gradient(#ff0084, #33001b); */
+  background-color: black;
+  /* background: linear-gradient(to left, #404040, black, #404040); */
+  /* background: linear-gradient(to right, black, gray, black); */
+  color: whitesmoke;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#submit:hover,
+#submit1:hover,
+#submit2:hover {
+  box-shadow: 0px 3px 10px black;
+}
+
+#submit2,
+#submit1 {
+  margin: 10px 1px;
+  padding: 10px 0px;
+  width: 120px;
+  /* background-color: black; */
+  background: linear-gradient(to right, black, gray, black);
+  color: whitesmoke;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  font-size: 16px;
+  transform: translateY(80px);
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+button a {
+  text-decoration: none;
+  color: white;
+}
