@@ -91,36 +91,6 @@ li.links1 {
 .underline:hover {
   position: relative;
 }
-/* 
-.underline::before {
-  content: '.';
-  position: absolute;
-  right: 0;
-  top: 1px;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(to right, white, black);
-  transition: all 0.6s;
-} */
-
-/* .underline::after {
-  content: '.';
-  position: absolute;
-  left: 0;
-  bottom: 1px;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(to right, white, black);
-  transition: all 0.6s; */
-/* } */
-
-/* .underline:hover::before {
-  width: 100%;
-} */
-
-/* .underline:hover::after {
-  width: 100%;
-} */
 
 @media screen and (max-width: 700px) {
   li.underline,
