@@ -50,7 +50,7 @@ button .dropbutton1 {
 } */
 
 li.dropdown1,
-li.links1 {
+li.right {
   float: right;
   overflow: hidden;
 }
@@ -74,7 +74,6 @@ li.links1 {
 }
 
 .dropdown1-content a:hover {
-  /* background: linear-gradient(#2193b0, #6dd5ed); */
   color: lightslategray;
 }
 
@@ -86,10 +85,6 @@ li.links1 {
 .dropbutton1:hover,
 .bounce:hover a {
   color: white;
-}
-
-.underline:hover {
-  position: relative;
 }
 
 @media screen and (max-width: 700px) {

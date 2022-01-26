@@ -7,13 +7,10 @@
 <body>
 <ul class="navbar1">
   <li class="left bounce" style="margin-left: 2px;"><a href="/homepage">Home</a></li>
-  <li class="left bounce" onclick="green(this)"><a onclick="green(this)"  href="/about">Contact me</a></li>
   <li class="left bounce"><a href="/dashboard" class="dashboard1">Dashboard</a></li>
-  <li class="links1">
-    <a  href="/logout" class="dropbutton1 logout left bounce">Logout</a>
+  <li class="right">
+    <a  href="/logout" class="dropbutton1 logout bounce" style="display: inline-block;">Logout</a>
   </li>
-  {{!-- <li class="logout left bounce" >
-  </li> --}}
   <li class="dropdown1">
     <a href="javascript:void(0)" class="dropbutton1">Sign in / Register</a>
     <div class="dropdown1-content">
@@ -26,22 +23,16 @@
   const a = {{isLoggedOut}} ? true : false;
   if(a){
     const e1 = document.getElementsByClassName('logout');
-    const e2 = document.getElementsByClassName('links1');
-    const e3 = document.getElementsByClassName('resume');
+    const e2 = document.getElementsByClassName('right');
     const e4 = document.getElementsByClassName('dashboard1');
     e1[0].setAttribute('style', 'display:none');
     e2[0].setAttribute('style', 'display:none');
-    e3[0].setAttribute('style', 'display:none');
     e4[0].setAttribute('style', 'display:none');
   }
 
   if(!a) {
     const e3 = document.getElementsByClassName('dropdown1');
     e3[0].setAttribute('style', 'display:none');
-  }
-
-  const green = (a) => {
-    console.log(a,'this')
   }
 </script>
 </body>
