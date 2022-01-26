@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 router.get('/:url', async (req, res) => {
   try {
     const url = req.params.url;
-    const shortUrlVisited = await User.find({ shortUrl: url });
+    const shortUrlVisited = await shortUrl.find({ shortUrl: url });
     shortUrlVisited.clicks++;
     res.send(shortUrlVisited);
   } catch (error) {
@@ -24,7 +24,7 @@ router.get('/:url', async (req, res) => {
 router.post('/:url', async (req, res) => {
   try {
     const url = req.params.url;
-    const shortUrlVisited = await User.find({ shortUrl: url });
+    const shortUrlVisited = await shortUrl.find({ shortUrl: url });
     shortUrlVisited.clicks++;
     res.send(shortUrlVisited);
   } catch (error) {
@@ -32,10 +32,10 @@ router.post('/:url', async (req, res) => {
   }
 });
 
-router.delete('/:username', async (req, res) => {
+router.delete('/:url', async (req, res) => {
   try {
     const username = req.params.username;
-    await User.deleteOne({ name: username });
+    await shortUrl.deleteOne({ shortUrl: url });
     res.status(200).send('Ok');
   } catch (error) {
     res.send(error);
