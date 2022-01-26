@@ -7,7 +7,9 @@ const path = require('path');
 const hbs = require('hbs');
 const favicon = require('serve-favicon');
 const session = require('express-session');
-
+const userRouter = require('./routers/users');
+const User = require('../src/models/user');
+const shortUrlRouter = require('./routers/shortUrls');
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -21,16 +23,20 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, '../public/templates/views'));
 hbs.registerPartials(path.join(__dirname, '../public/templates/partials'));
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use('/users', userRouter);
+app.use('/byte', shortUrlRouter);
 
 app.get('/', (req, res) => {
   const loggedIn = req.session.user ? true : false;
   try {
     if (loggedIn) {
-      res.redirect('/');
+      res.redirect('/dashboard');
     } else {
       res.render('signin', {
         isLoggedOut: !loggedIn,
-        user: req.session.user,
       });
     }
   } catch (err) {
@@ -72,7 +78,64 @@ app.get('/signin', (req, res) => {
   }
 });
 
-app.get('/logout', checkSignIn, (req, res) => {
+app.post('/signup', async (req, res) => {
+  const loggedIn = req.session.user ? true : false;
+  console.log(loggedIn, 'loggedin val');
+  try {
+    if (loggedIn) {
+      res.redirect('/dashboard');
+    } else {
+      console.log(req.body, 'body');
+      const password = req.body.password;
+      const cn_password = req.body.cnf_password;
+      if (cn_password === password) {
+        const newUser = new User({
+          name: req.body.username,
+          password: req.body.password,
+        });
+        const saveUser = await newUser.save();
+        res.redirect('/');
+      } else {
+        res.render('404', {
+          error: 'Error:Passwords are not matching',
+          isLoggedOut: !loggedIn,
+        });
+      }
+    }
+  } catch (err) {
+    res.render('404', {
+      error: err,
+      isLoggedOut: !loggedIn,
+    });
+  }
+});
+
+app.post('/signin', async (req, res) => {
+  const loggedIn = req.session.user ? true : false;
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ name: username });
+    if (Object.keys(user).length) {
+      const match = await bcrypt.compare(password, user.password);
+      if (match) {
+        req.session.user = user;
+        res.redirect('/dashboard');
+      } else {
+        res.render('404', {
+          error: 'Invalid password',
+          isLoggedOut: !loggedIn,
+        });
+      }
+    }
+  } catch (err) {
+    res.render('404', {
+      error: 'Invalid username',
+      isLoggedOut: !loggedIn,
+    });
+  }
+});
+
+app.get('/logout', (req, res) => {
   const loggedIn = req.session.user ? true : false;
   try {
     req.session.destroy((err) => {
@@ -93,11 +156,29 @@ app.get('/logout', checkSignIn, (req, res) => {
   }
 });
 
+app.get('/home', (req, res) => {
+  const loggedIn = req.session.user ? true : false;
+  res.render('home', { isLoggedOut: !loggedIn });
+});
+
+app.get('/dashboard', (req, res) => {
+  const loggedIn = req.session.user ? true : false;
+  res.render('dashboard', { isLoggedOut: !loggedIn });
+});
+
+app.use('*', (req, res) => {
+  const loggedIn = req.session.user ? true : false;
+  res.render('404', {
+    error: 'Page not found',
+  });
+});
+
 function checkSignIn(req, res, next) {
+  const loggedIn = req.session.user ? true : false;
   if (req.session.user) {
-    next(); //If session exists, proceed to page
+    next();
   } else {
-    res.redirect('/signin'); //Error, trying to access unauthorized page!
+    res.redirect('/dashboard');
   }
 }
 
