@@ -1,6 +1,8 @@
 const express = require('express');
 const router = new express.Router();
-const shortUrl = require('../models/shortUrl');
+const ShortUrl = require('../models/shortUrl');
+const User = require('../models/user');
+const shortid = require('shortid');
 
 router.get('/', (req, res) => {
   try {
@@ -13,22 +15,48 @@ router.get('/', (req, res) => {
 router.get('/:url', async (req, res) => {
   try {
     const url = req.params.url;
-    const shortUrlVisited = await shortUrl.find({ shortUrl: url });
+    const shortUrlVisited = await shortUrl.find({ smallUrl: url });
     shortUrlVisited.clicks++;
-    res.send(shortUrlVisited);
+    await shortUrlVisited.save();
+    res.redirect(shortUrlVisited.longUrl);
   } catch (error) {
     res.send(error);
   }
 });
 
-router.post('/:url', async (req, res) => {
+router.post('/', async (req, res) => {
+  console.log('in post');
+  const { origUrl } = req.body;
+  const base = process.env.BASE;
+  const urlId = shortid.generate();
+  console.log(req.session, 'req session');
   try {
-    const url = req.params.url;
-    const shortUrlVisited = await shortUrl.find({ shortUrl: url });
-    shortUrlVisited.clicks++;
-    res.send(shortUrlVisited);
-  } catch (error) {
-    res.send(error);
+    let url = await ShortUrl.findOne({ longUrl: origUrl });
+    if (url) {
+      res.send(url.smallUrl);
+    } else {
+      const sUrl = `${base}/${urlId}`;
+      const user = await User.findOne({ name: req.session.user.name });
+      console.log(user, 'user');
+      user.urls.push({
+        smallUrl: sUrl,
+        longUrl: origUrl,
+      });
+      console.log(origUrl, 'long url');
+      const url = new ShortUrl({
+        longUrl: origUrl,
+        smallUrl: sUrl,
+        clicks: 0,
+      });
+      await user.save();
+      console.log(user, 'user');
+      await url.save();
+      console.log(user.urls, 'urls');
+      res.redirect('/dashboard');
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json('Server Error');
   }
 });
 

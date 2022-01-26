@@ -10,10 +10,10 @@
 <body>
   {{>navbar}}
 
-  <h1 style="text-align: center;margin-top:20px">Hello {{name}}</h1>
+  <h1 style="text-align: center;margin-top:20px">Hello {{user.name}}</h1>
   <div class="form-container">
     <div class="container mt-5">
-     <table class="table">
+    <table class="table" id="myTable">
       <thead>
           <tr>
             <th scope="col">Long Url</th>
@@ -22,49 +22,32 @@
             <th scope="col">Action</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>https://digiprex.com/brand1/brand2/brand3/?xyz=123</td>
-            <td>https://digibyte-app/a34x2BU</td>
-            <td>20</td>
-            <td>
-              <button type="button" class="btn btn-danger">Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>https://digiprex.com/brand1/brand2/brand3/?xyz=345</td>
-            <td>https://digibyte-app/j73R124</td>
-            <td>10</td>
-            <td>
-              <button type="button" class="btn btn-danger">Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>https://digiprex.com/brand1/brand2/brand3/?xyz=456</td>
-            <td>https://digibyte-app/y6fmN12X</td>
-            <td>30</td>
-            <td>
-              <button type="button" class="btn btn-danger">Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>
-                <div class="col">
-                  <input type="text" style="width: 400px;" class="form-control" placeholder="Enter the url" name="email" autocomplete="off">
-            </td>
-            <td>
-              <div class="col">
-                <input type="password" class="form-control" placeholder="Short url" name="pswd" autocomplete="off" style="width: 350px;" disabled>
-              </div>
-            </td>
-            <td>
-              <button type="button" class="btn btn-primary">Get short url</button>
-            </td>
-          </tr>
         </tbody>
       </table>
+      <form class="row g-3" action="/byte" method="post">
+          <div class="col-md-6">
+            <label  class="form-label">Enter url to generate tiny url</label>
+            <input type="text" class="form-control" name="origUrl">
+          </div>
+          <div class="col-12">
+            <button type="submit" class="btn btn-dark">Get url</button>
+          </div>
+        </form>
     </div>
   </div>
+  <script>
+   {{#each urls}}
+    var table = document.getElementById('myTable');
+      var rowCount = table.rows.length;
+      var row = table.insertRow(rowCount);
+
+      row.insertCell(0).innerHTML = `{{this.longUrl}}`
+      row.insertCell(1).innerHTML = `{{this.smallUrl}}`
+      row.insertCell(2).innerHTML = `{{this.clicks}}`
+   {{/each}}
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>;
+  <script src="../../scripts/generateUrl.js"></script>
 </body>
 </html>

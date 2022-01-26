@@ -27,7 +27,7 @@ router.put('/:username', async (req, res) => {
   try {
     const username = req.params.username;
     const user = await User.findOneAndUpdate({ name: username }, req.body);
-    res.send(user.password);
+    res.send(user);
   } catch (error) {
     res.send(error);
   }

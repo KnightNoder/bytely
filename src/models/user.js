@@ -13,7 +13,7 @@ const userSchema = mongoose.Schema({
   },
   urls: [
     {
-      shortUrl: String,
+      smallUrl: String,
       longUrl: String,
       clicks: {
         type: Number,

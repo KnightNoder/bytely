@@ -64,6 +64,7 @@ app.get('/signin', (req, res) => {
   const loggedIn = req.session.user ? true : false;
   try {
     if (loggedIn) {
+      user = req.session.user;
       res.redirect('/dashboard');
     } else {
       res.render('signin', {
@@ -118,6 +119,7 @@ app.post('/signin', async (req, res) => {
       const match = await bcrypt.compare(password, user.password);
       if (match) {
         req.session.user = user;
+        console.log(req.session, 'session data');
         res.redirect('/dashboard');
       } else {
         res.render('404', {
@@ -160,11 +162,15 @@ app.get('/home', (req, res) => {
   res.render('home', { isLoggedOut: !loggedIn });
 });
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', async (req, res) => {
   const loggedIn = req.session.user ? true : false;
+  console.log(req.session.user.name);
+  const updatedUser = await User.findOne({ name: req.session.user.name });
+  console.log(updatedUser, 'user');
   res.render('dashboard', {
     isLoggedOut: !loggedIn,
-    name: req.session.user.name,
+    user: req.session.user,
+    urls: updatedUser.urls,
   });
 });
 
@@ -172,6 +178,7 @@ app.use('*', (req, res) => {
   const loggedIn = req.session.user ? true : false;
   res.render('404', {
     error: 'Page not found',
+    isLoggedOut: !loggedIn,
   });
 });
 
@@ -180,7 +187,7 @@ function checkSignIn(req, res, next) {
   if (req.session.user) {
     next();
   } else {
-    res.redirect('/dashboard');
+    res.redirect('/signin');
   }
 }
 
