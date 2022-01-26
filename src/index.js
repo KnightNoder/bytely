@@ -64,7 +64,7 @@ app.get('/signin', (req, res) => {
   const loggedIn = req.session.user ? true : false;
   try {
     if (loggedIn) {
-      res.redirect('/');
+      res.redirect('/dashboard');
     } else {
       res.render('signin', {
         isLoggedOut: !loggedIn,
@@ -162,7 +162,10 @@ app.get('/home', (req, res) => {
 
 app.get('/dashboard', (req, res) => {
   const loggedIn = req.session.user ? true : false;
-  res.render('dashboard', { isLoggedOut: !loggedIn });
+  res.render('dashboard', {
+    isLoggedOut: !loggedIn,
+    name: req.session.user.name,
+  });
 });
 
 app.use('*', (req, res) => {
