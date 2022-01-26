@@ -81,12 +81,10 @@ app.get('/signin', (req, res) => {
 
 app.post('/signup', async (req, res) => {
   const loggedIn = req.session.user ? true : false;
-  console.log(loggedIn, 'loggedin val');
   try {
     if (loggedIn) {
       res.redirect('/dashboard');
     } else {
-      console.log(req.body, 'body');
       const password = req.body.password;
       const cn_password = req.body.cnf_password;
       if (cn_password === password) {

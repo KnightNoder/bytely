@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
   try {
     res.send('sorry no resource found');
   } catch (error) {
-    console.log(error);
+    res.send(error);
   }
 });
 
@@ -17,7 +17,7 @@ router.get('/:url', async (req, res) => {
     shortUrlVisited.clicks++;
     res.send(shortUrlVisited);
   } catch (error) {
-    console.log(error);
+    res.send(error);
   }
 });
 
@@ -28,7 +28,7 @@ router.post('/:url', async (req, res) => {
     shortUrlVisited.clicks++;
     res.send(shortUrlVisited);
   } catch (error) {
-    console.log(error);
+    res.send(error);
   }
 });
 
@@ -38,7 +38,7 @@ router.delete('/:username', async (req, res) => {
     await User.deleteOne({ name: username });
     res.status(200).send('Ok');
   } catch (error) {
-    console.log(error);
+    res.send(error);
   }
 });
 

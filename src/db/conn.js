@@ -4,8 +4,6 @@ const DB_URL =
     ? `${process.env.PROD_DB_URL}`
     : `${process.env.DEV_DB_URL}`;
 
-console.log(process.env.NODE_ENV, 'process.env.node_env');
-console.log(DB_URL, 'db url');
 mongoose
   .connect(`${DB_URL}`, {
     useNewUrlParser: true,
