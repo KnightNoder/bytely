@@ -10,6 +10,7 @@ const session = require('express-session');
 const userRouter = require('./routers/users');
 const User = require('../src/models/user');
 const shortUrlRouter = require('./routers/shortUrls');
+const bcrypt = require('bcrypt');
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
