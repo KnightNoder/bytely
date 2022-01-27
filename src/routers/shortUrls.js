@@ -34,17 +34,20 @@ router.post('/', async (req, res) => {
       res.send(url.smallUrl);
     } else {
       const sUrl = `${base}/${urlId}`;
-      const user = await User.findOne({ name: req.session.user.name });
-      user.urls.push({
-        smallUrl: sUrl,
+      let oldArray = req.session.user.urls;
+      oldArray.push({
         longUrl: origUrl,
+        smallUrl: sUrl,
       });
       const url = new ShortUrl({
         longUrl: origUrl,
         smallUrl: sUrl,
         clicks: 0,
       });
-      await user.save();
+      await User.findOneAndUpdate({
+        name: req.session.user.name,
+        urls: oldArray,
+      });
       await url.save();
       res.redirect('/dashboard');
     }
