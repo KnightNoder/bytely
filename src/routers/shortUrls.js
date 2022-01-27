@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
   try {
     let url = await ShortUrl.findOne({ longUrl: origUrl });
     if (url) {
-      res.send(url.smallUrl);
+      res.redirect('/dashboard');
     } else {
       const sUrl = `${base}/${urlId}`;
       let oldArray = req.session.user.urls;
@@ -44,10 +44,12 @@ router.post('/', async (req, res) => {
         smallUrl: sUrl,
         clicks: 0,
       });
-      await User.findOneAndUpdate({
-        name: req.session.user.name,
-        urls: oldArray,
-      });
+      await User.findOneAndUpdate(
+        {
+          name: req.session.user.name,
+        },
+        { urls: oldArray }
+      );
       await url.save();
       res.redirect('/dashboard');
     }
