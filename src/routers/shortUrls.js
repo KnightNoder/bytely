@@ -15,9 +15,18 @@ router.get('/', (req, res) => {
 router.get('/:url', async (req, res) => {
   try {
     const url = req.params.url;
-    const shortUrlVisited = await shortUrl.find({ smallUrl: url });
+    const base = process.env.BASE;
+    const sUrl = `${base}/${url}`;
+    const shortUrlVisited = await ShortUrl.findOne({ smallUrl: sUrl });
     shortUrlVisited.clicks++;
     await shortUrlVisited.save();
+    const index = req.session.user.urls.findIndex((x) => x.smallUrl == sUrl);
+    req.session.user.urls[index].clicks++;
+    const urlsWithClicks = req.session.user.urls;
+    const user = await User.findOneAndUpdate(
+      { name: req.session.user.name },
+      { urls: urlsWithClicks }
+    );
     res.redirect(shortUrlVisited.longUrl);
   } catch (error) {
     res.send(error);
