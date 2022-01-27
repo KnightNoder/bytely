@@ -21,7 +21,12 @@ router.get('/:url', async (req, res) => {
     shortUrlVisited.clicks++;
     await shortUrlVisited.save();
     const index = req.session.user.urls.findIndex((x) => x.smallUrl == sUrl);
-    req.session.user.urls[index].clicks++;
+    if (req.session.user.urls[index].clicks) {
+      req.session.user.urls[index].clicks++;
+    } else {
+      req.session.user.urls[index].clicks = 0;
+      req.session.user.urls[index].clicks++;
+    }
     const urlsWithClicks = req.session.user.urls;
     const user = await User.findOneAndUpdate(
       { name: req.session.user.name },
@@ -38,8 +43,9 @@ router.post('/', async (req, res) => {
   const base = process.env.BASE;
   const urlId = shortid.generate();
   try {
-    let url = await ShortUrl.findOne({ longUrl: origUrl });
-    if (url) {
+    let user = await User.findOne({ name: req.session.user.name });
+    const index = user.urls.findIndex((x) => x == origUrl);
+    if (index >= 0) {
       res.redirect('/dashboard');
     } else {
       const sUrl = `${base}/${urlId}`;
