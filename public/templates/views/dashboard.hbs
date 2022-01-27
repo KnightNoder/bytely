@@ -44,6 +44,7 @@
    var createA = document.createElement('a');
    var createAText = document.createTextNode(`{{this.smallUrl}}`);
    createA.setAttribute('href', `/byte/${code}`);
+   createA.setAttribute('target','_blank');
    createA.appendChild(createAText);
    btn.innerHTML = 'Delete'
    btn.setAttribute('id',`{{this.smallUrl}}`)
