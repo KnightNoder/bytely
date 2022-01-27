@@ -119,7 +119,6 @@ app.post('/signin', async (req, res) => {
       const match = await bcrypt.compare(password, user.password);
       if (match) {
         req.session.user = user;
-        console.log(req.session, 'session data');
         res.redirect('/dashboard');
       } else {
         res.render('404', {
@@ -164,9 +163,7 @@ app.get('/home', (req, res) => {
 
 app.get('/dashboard', async (req, res) => {
   const loggedIn = req.session.user ? true : false;
-  console.log(req.session.user.name);
   const updatedUser = await User.findOne({ name: req.session.user.name });
-  console.log(updatedUser, 'user');
   res.render('dashboard', {
     isLoggedOut: !loggedIn,
     user: req.session.user,

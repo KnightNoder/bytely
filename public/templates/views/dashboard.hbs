@@ -13,8 +13,8 @@
   <h1 style="text-align: center;margin-top:20px">Hello {{user.name}}</h1>
   <div class="form-container">
     <div class="container mt-5">
-    <table class="table" id="myTable">
-      <thead>
+    <table class="table table-hover table-striped">
+      <thead class="table-light">
           <tr>
             <th scope="col">Long Url</th>
             <th scope="col">Short Url</th>
@@ -27,7 +27,7 @@
       <form class="row g-3" action="/byte" method="post">
           <div class="col-md-6">
             <label  class="form-label">Enter url to generate tiny url</label>
-            <input type="text" class="form-control" name="origUrl">
+            <input type="text" class="form-control" name="origUrl" autocomplete="off">
           </div>
           <div class="col-12">
             <button type="submit" class="btn btn-dark">Get url</button>
@@ -36,14 +36,21 @@
     </div>
   </div>
   <script>
+   
    {{#each urls}}
-    var table = document.getElementById('myTable');
-      var rowCount = table.rows.length;
-      var row = table.insertRow(rowCount);
-
+   var btn = document.createElement("button");
+   btn.innerHTML = 'Delete'
+   btn.setAttribute('id',`{{this.smallUrl}}`)
+   btn.setAttribute('class','btn btn-dark')
+   btn.setAttribute('onclick','deleteRow(this)')
+    var table = document.getElementsByClassName('table');
+      var rowCount = table[0].rows.length;
+      var row = table[0].insertRow(rowCount);
+      row.setAttribute('id',`{{this.smallUrl}}`)
       row.insertCell(0).innerHTML = `{{this.longUrl}}`
       row.insertCell(1).innerHTML = `{{this.smallUrl}}`
       row.insertCell(2).innerHTML = `{{this.clicks}}`
+      row.insertCell(3).appendChild(btn)
    {{/each}}
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

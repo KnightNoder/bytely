@@ -25,11 +25,9 @@ router.get('/:url', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  console.log('in post');
   const { origUrl } = req.body;
   const base = process.env.BASE;
   const urlId = shortid.generate();
-  console.log(req.session, 'req session');
   try {
     let url = await ShortUrl.findOne({ longUrl: origUrl });
     if (url) {
@@ -37,21 +35,17 @@ router.post('/', async (req, res) => {
     } else {
       const sUrl = `${base}/${urlId}`;
       const user = await User.findOne({ name: req.session.user.name });
-      console.log(user, 'user');
       user.urls.push({
         smallUrl: sUrl,
         longUrl: origUrl,
       });
-      console.log(origUrl, 'long url');
       const url = new ShortUrl({
         longUrl: origUrl,
         smallUrl: sUrl,
         clicks: 0,
       });
       await user.save();
-      console.log(user, 'user');
       await url.save();
-      console.log(user.urls, 'urls');
       res.redirect('/dashboard');
     }
   } catch (err) {
@@ -62,9 +56,15 @@ router.post('/', async (req, res) => {
 
 router.delete('/:url', async (req, res) => {
   try {
-    const username = req.params.username;
-    await shortUrl.deleteOne({ shortUrl: url });
-    res.status(200).send('Ok');
+    const url = req.params.url;
+    const base = process.env.BASE;
+    const sUrl = `${base}/${url}`;
+    const resp = await ShortUrl.deleteOne({ smallUrl: sUrl });
+    const user = req.session.user;
+    const deleteIndex = user.urls.findIndex((x) => x.smallUrl == sUrl);
+    const delUser = user.urls.splice(deleteIndex, 1);
+    await User.findOneAndUpdate({ name: user.name }, { urls: user.urls });
+    res.send('delete success');
   } catch (error) {
     res.send(error);
   }
